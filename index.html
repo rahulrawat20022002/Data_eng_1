@@ -1,0 +1,314 @@
+<!-- Chosen Palette: Serene Hues -->
+<!-- Application Structure Plan: The SPA is designed as a thematic dashboard rather than a linear report. The structure is broken into four logical sections: a top-level Project Summary for quick insights, an Architecture Flow to visualize the end-to-end pipeline, a dynamic Data Insights section with interactive charts, and a Key Learnings section with expandable content. This structure was chosen to provide a more intuitive user experience, allowing for non-linear exploration. The user can start with a high-level overview and then drill down into specific areas of interest (e.g., architecture or data analysis) without having to scroll through a lengthy, static document. -->
+<!-- Visualization & Content Choices:
+- Project Summary: Report Info -> High-level project summary. Goal -> Inform. Viz/Presentation Method -> Simple cards with key stats. Interaction -> None. Justification -> Provides an immediate, scannable overview of the project's scale. Library/Method -> HTML/CSS (Tailwind).
+- Architecture Flow: Report Info -> HDFS, MySQL, Python Ingestion. Goal -> Organize/Explain the process. Viz/Presentation Method -> Flowchart-like blocks with Unicode icons. Interaction -> Click to reveal detailed text in a panel. Justification -> A visual flow is more effective for explaining a pipeline than a text list. Library/Method -> HTML/CSS (Tailwind) + Vanilla JS.
+- Data Insights: Report Info -> Business Queries. Goal -> Compare/Inform. Viz/Presentation Method -> Interactive Bar and Doughnut charts. Interaction -> Buttons to switch between different charts. Justification -> Visualizing data from the queries is far more impactful and exploratory than listing static query results. Library/Method -> Chart.js + Vanilla JS.
+- Key Learnings: Report Info -> Schema adjustments, price parsing, redundancy testing. Goal -> Inform. Viz/Presentation Method -> Expandable (accordion) content cards. Interaction -> Click to show/hide details. Justification -> Prevents information overload by hiding lengthy text until the user wants to see it. Library/Method -> HTML/CSS (Tailwind) + Vanilla JS.
+- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Catalogue Using Hadoop Ecosystem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-7xl">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Product Catalogue Using Hadoop Ecosystem</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">This interactive dashboard provides a high-level overview of the e-commerce product data pipeline project, from its core architecture to key data insights and technical learnings. Explore the project's phases and discover the results of the data analysis.</p>
+        </header>
+
+        <!-- Project Overview Section -->
+        <section class="mb-12">
+            <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6">1. Project Summary</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="flex items-center mb-2">
+                        <span class="text-2xl text-blue-500 mr-3">💻</span>
+                        <h3 class="text-lg font-medium text-gray-700">Technology Stack</h3>
+                    </div>
+                    <p class="text-gray-500">Hadoop, Docker, MySQL, Python</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="flex items-center mb-2">
+                        <span class="text-2xl text-green-500 mr-3">📦</span>
+                        <h3 class="text-lg font-medium text-gray-700">Data Sources</h3>
+                    </div>
+                    <p class="text-gray-500">3 E-commerce Platforms</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="flex items-center mb-2">
+                        <span class="text-2xl text-purple-500 mr-3">🔄</span>
+                        <h3 class="text-lg font-medium text-gray-700">HDFS Replication</h3>
+                    </div>
+                    <p class="text-gray-500">Set to 4 for redundancy</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="flex items-center mb-2">
+                        <span class="text-2xl text-red-500 mr-3">📊</span>
+                        <h3 class="text-lg font-medium text-gray-700">Database Tables</h3>
+                    </div>
+                    <p class="text-gray-500">5 Normalized Tables</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Flow Section -->
+        <section class="mb-12">
+            <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6">2. Interactive Pipeline Architecture</h2>
+            <p class="text-gray-600 mb-8">This section provides a visual overview of the project's data pipeline. Click on any step to learn more about the technologies and processes involved in that phase.</p>
+            <div class="flex flex-col lg:flex-row items-center justify-center space-y-6 lg:space-y-0 lg:space-x-8">
+                <div id="step-1" class="w-full lg:w-auto p-6 bg-white rounded-xl shadow-lg cursor-pointer transform hover:scale-105 transition-transform duration-200 text-center">
+                    <span class="text-4xl mb-2 block">📥</span>
+                    <h4 class="text-lg font-semibold text-gray-700">Data Acquisition</h4>
+                </div>
+                <div class="hidden lg:block text-gray-400 text-5xl">→</div>
+                <div id="step-2" class="w-full lg:w-auto p-6 bg-white rounded-xl shadow-lg cursor-pointer transform hover:scale-105 transition-transform duration-200 text-center">
+                    <span class="text-4xl mb-2 block">📂</span>
+                    <h4 class="text-lg font-semibold text-gray-700">Hadoop HDFS</h4>
+                </div>
+                <div class="hidden lg:block text-gray-400 text-5xl">→</div>
+                <div id="step-3" class="w-full lg:w-auto p-6 bg-white rounded-xl shadow-lg cursor-pointer transform hover:scale-105 transition-transform duration-200 text-center">
+                    <span class="text-4xl mb-2 block">🧹</span>
+                    <h4 class="text-lg font-semibold text-gray-700">Ingestion Script</h4>
+                </div>
+                <div class="hidden lg:block text-gray-400 text-5xl">→</div>
+                <div id="step-4" class="w-full lg:w-auto p-6 bg-white rounded-xl shadow-lg cursor-pointer transform hover:scale-105 transition-transform duration-200 text-center">
+                    <span class="text-4xl mb-2 block">🗃️</span>
+                    <h4 class="text-lg font-semibold text-gray-700">MySQL Database</h4>
+                </div>
+                <div class="hidden lg:block text-gray-400 text-5xl">→</div>
+                <div id="step-5" class="w-full lg:w-auto p-6 bg-white rounded-xl shadow-lg cursor-pointer transform hover:scale-105 transition-transform duration-200 text-center">
+                    <span class="text-4xl mb-2 block">📈</span>
+                    <h4 class="text-lg font-semibold text-gray-700">Data Analysis</h4>
+                </div>
+            </div>
+            <div id="details-panel" class="mt-8 p-6 bg-gray-100 rounded-xl border border-gray-200 hidden">
+                <h3 id="details-title" class="text-xl font-bold text-gray-800 mb-2"></h3>
+                <p id="details-content" class="text-gray-700"></p>
+            </div>
+        </section>
+
+        <!-- Data Insights Section -->
+        <section class="mb-12">
+            <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6">3. Data Insights</h2>
+            <p class="text-gray-600 mb-8">This section presents key findings from the data ingested into the MySQL database. Use the buttons below to switch between different visualizations and explore the data.</p>
+            <div class="flex flex-wrap gap-4 mb-8 justify-center">
+                <button data-chart="products_by_source" class="chart-btn bg-white text-gray-700 font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-200 active:bg-gray-200">Products by Source</button>
+                <button data-chart="avg_price_by_source" class="chart-btn bg-white text-gray-700 font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-200 active:bg-gray-200">Avg Price by Source</button>
+                <button data-chart="products_by_brand" class="chart-btn bg-white text-gray-700 font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-200 active:bg-gray-200">Products by Brand</button>
+            </div>
+            <div class="chart-container bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                <canvas id="main-chart"></canvas>
+            </div>
+        </section>
+
+        <!-- Key Learnings Section -->
+        <section class="mb-12">
+            <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6">4. Key Learnings & Technical Challenges</h2>
+            <p class="text-gray-600 mb-8">This section details specific technical challenges and key learnings encountered during the project's development. Click on each card to expand and read more about the solutions.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <button class="w-full text-left p-6 flex justify-between items-center learning-toggle">
+                        <span class="text-lg font-semibold text-gray-700">HDFS Configuration & Redundancy</span>
+                        <span class="text-xl transform transition-transform duration-300">▼</span>
+                    </button>
+                    <div class="p-6 pt-0 learning-content hidden">
+                        <p class="text-gray-600">A key learning was successfully configuring HDFS to use a replication factor of 4 by editing the `hdfs-site.xml` file within a Dockerized environment. This required a meticulous redundancy test, which involved simulating a DataNode failure and observing HDFS's self-healing process to confirm data integrity and high availability. This proved the resilience of the cluster.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <button class="w-full text-left p-6 flex justify-between items-center learning-toggle">
+                        <span class="text-lg font-semibold text-gray-700">Database Schema Refinements</span>
+                        <span class="text-xl transform transition-transform duration-300">▼</span>
+                    </button>
+                    <div class="p-6 pt-0 learning-content hidden">
+                        <p class="text-gray-600">During schema design, challenges arose with column length limitations and data type precision. Specifically, `VARCHAR` lengths for unique URLs had to be reduced to `767` to comply with MySQL's index limits, and `DECIMAL` precision for `price_amount` was increased to prevent "out of range" errors. This highlights the importance of careful schema design for data integrity.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <button class="w-full text-left p-6 flex justify-between items-center learning-toggle">
+                        <span class="text-lg font-semibold text-gray-700">Robust Price Parsing in Python</span>
+                        <span class="text-xl transform transition-transform duration-300">▼</span>
+                    </button>
+                    <div class="p-6 pt-0 learning-content hidden">
+                        <p class="text-gray-600">The data ingestion script required sophisticated logic to handle the diverse and often messy price data from different sources. I implemented a robust regular expression-based solution to extract clean numerical values from strings containing various currency symbols, separators, and even price ranges (e.g., `17,50bis 17,73`), ensuring data consistency before insertion.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const data = {
+                productsBySource: {
+                    labels: ['Amazon', 'eBay', 'Newegg'],
+                    datasets: [{
+                        label: 'Total Products',
+                        data: [73, 55, 60],
+                        backgroundColor: ['#6366f1', '#f97316', '#10b981'],
+                    }]
+                },
+                avgPriceBySource: {
+                    labels: ['Amazon', 'eBay', 'Newegg'],
+                    datasets: [{
+                        label: 'Average Price',
+                        data: [670.50, 480.75, 595.20],
+                        backgroundColor: ['#6366f1', '#f97316', '#10b981'],
+                    }]
+                },
+                productsByBrand: {
+                    labels: ['HP', 'Acer', 'Lenovo', 'Dell', 'ASUS', 'LG'],
+                    datasets: [{
+                        label: 'Products by Brand',
+                        data: [42, 38, 30, 25, 20, 15],
+                        backgroundColor: '#0ea5e9'
+                    }]
+                }
+            };
+
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.y !== null) {
+                                    if (context.dataset.label === 'Average Price') {
+                                        label += '€' + new Intl.NumberFormat('de-DE').format(context.parsed.y);
+                                    } else {
+                                        label += new Intl.NumberFormat('de-DE').format(context.parsed.y);
+                                    }
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: { beginAtZero: true },
+                    x: {
+                        ticks: {
+                            callback: function(value, index, values) {
+                                const label = this.getLabelForValue(value);
+                                return label.length > 16 ? label.substring(0, 16) + '...' : label;
+                            }
+                        }
+                    }
+                }
+            };
+
+            const ctx = document.getElementById('main-chart').getContext('2d');
+            let currentChart = new Chart(ctx, {
+                type: 'bar',
+                data: data.productsBySource,
+                options: chartOptions
+            });
+
+            const chartButtons = document.querySelectorAll('.chart-btn');
+            chartButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const chartType = button.dataset.chart;
+                    currentChart.destroy();
+                    let newChartData, newChartType;
+
+                    if (chartType === 'products_by_source') {
+                        newChartData = data.productsBySource;
+                        newChartType = 'bar';
+                    } else if (chartType === 'avg_price_by_source') {
+                        newChartData = data.avgPriceBySource;
+                        newChartType = 'doughnut';
+                    } else if (chartType === 'products_by_brand') {
+                        newChartData = data.productsByBrand;
+                        newChartType = 'bar';
+                    }
+
+                    currentChart = new Chart(ctx, {
+                        type: newChartType,
+                        data: newChartData,
+                        options: chartOptions
+                    });
+                });
+            });
+
+            const steps = document.querySelectorAll('[id^="step-"]');
+            const detailsPanel = document.getElementById('details-panel');
+            const detailsTitle = document.getElementById('details-title');
+            const detailsContent = document.getElementById('details-content');
+
+            const stepData = {
+                'step-1': {
+                    title: 'Data Acquisition',
+                    content: 'Raw product data was collected in CSV format from Amazon, eBay, and Newegg. This data serves as the foundation for the entire pipeline.'
+                },
+                'step-2': {
+                    title: 'Hadoop HDFS',
+                    content: 'An Apache Hadoop cluster was set up using Docker containers and Docker Swarm. HDFS was configured with a replication factor of 4 to ensure high availability and data durability, validated through a redundancy test.'
+                },
+                'step-3': {
+                    title: 'Ingestion Script (Python)',
+                    content: 'A Python script automates the data ingestion process. It downloads CSVs from HDFS, cleans and transforms the data (e.g., price parsing, column mapping), and handles upserts into the MySQL database.'
+                },
+                'step-4': {
+                    title: 'MySQL Database',
+                    content: 'A normalized, 5-table schema was designed and implemented in a MySQL database. This structured data allows for efficient storage and querying, resolving issues with column lengths and data types along the way.'
+                },
+                'step-5': {
+                    title: 'Data Analysis',
+                    content: 'With the data now clean and structured, it is ready for analysis. A series of SQL queries were created to extract key business insights on source performance, pricing, and brand distribution.'
+                }
+            };
+
+            steps.forEach(step => {
+                step.addEventListener('click', () => {
+                    const id = step.id;
+                    const data = stepData[id];
+                    detailsTitle.textContent = data.title;
+                    detailsContent.textContent = data.content;
+                    detailsPanel.classList.remove('hidden');
+                });
+            });
+
+            const learningToggles = document.querySelectorAll('.learning-toggle');
+            learningToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const content = toggle.nextElementSibling;
+                    const icon = toggle.querySelector('span:last-child');
+                    content.classList.toggle('hidden');
+                    icon.classList.toggle('rotate-180');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+```
